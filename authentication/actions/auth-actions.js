@@ -52,21 +52,28 @@ export async function login(prevState, formData) {
   if (!existingUser) {
     return {
       errors: {
-        email: "Could not authenticate user, please check your credentials",
+        email: "Could not authenticate user, please check your credentials.",
       },
     };
   }
 
-  const isValidPassword = verifyPassword(existingUser.passwrod, password);
+  const isValidPassword = verifyPassword(existingUser.password, password);
 
   if (!isValidPassword) {
     return {
       errors: {
-        password: "Could not authenticate user, please check your credentials",
+        password: "Could not authenticate user, please check your credentials.",
       },
     };
   }
 
   await createAuthSession(existingUser.id);
   redirect("/training");
+}
+
+export async function auth(mode, prevState, formData) {
+  if (mode === "login") {
+    return login(prevState, formData);
+  }
+  return signup(prevState, formData);
 }
